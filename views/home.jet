@@ -9,10 +9,15 @@
 {{end}}
 
 {{block pageContent()}}
-<div>
+<div class="text-center">
     <h1>
-        Home <br />
-        {{count}}
+        <div class="mt-3">
+            Home
+        </div>
+        <div class="mt-5">
+            SSR:<br />
+            You've been here {{count}} times!
+        </div>
     </h1>
 </div>
 {{end}}
