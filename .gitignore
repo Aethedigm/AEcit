@@ -1,0 +1,5 @@
+# Database
+db-data/*
+
+# Ignore .env
+.env

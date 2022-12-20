@@ -1,0 +1,19 @@
+{{extends "./template/base.jet"}}
+
+{{block browserTitle()}}{{end}}
+
+{{block css()}}
+<style>
+
+</style>
+{{end}}
+
+{{block pageContent()}}
+
+{{end}}
+
+{{block js()}}
+<script>
+
+</script>
+{{end}}
