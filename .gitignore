@@ -3,3 +3,6 @@ db-data/*
 
 # Ignore .env
 .env
+
+# Builds
+bin/*
