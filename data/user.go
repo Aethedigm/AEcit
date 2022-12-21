@@ -1,16 +1,20 @@
 package data
 
 import (
+	"time"
+
 	up "github.com/upper/db/v4"
 )
 
 type User struct {
-	ID        int64  `db:"id"`
-	FirstName string `db:"first_name"`
-	LastName  string `db:"last_name"`
-	Username  string `db:"username"`
-	Password  string `db:"password"`
-	Email     string `db:"email"`
+	ID        int64     `db:"id"`
+	FirstName string    `db:"first_name"`
+	LastName  string    `db:"last_name"`
+	Username  string    `db:"username"`
+	Password  string    `db:"password"`
+	Email     string    `db:"email"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func (u *User) Table() string {
