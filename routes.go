@@ -16,6 +16,7 @@ func MakeRoutes(session *scs.SessionManager) chi.Router {
 	r.Use(session.LoadAndSave)
 
 	// ROUTES
+	r.Get("/test", Handler.TestUser)
 
 	r.Get("/", Handler.Home)
 

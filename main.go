@@ -48,6 +48,9 @@ func main() {
 	// Models init
 	Models.New(DB)
 
+	// Print VERSION
+	log.Println("VERSION:", os.Getenv("VERSION"))
+
 	if os.Getenv("PRODUCTION") == "true" {
 		log.Println("Listening on port 443 with TLS/SSL")
 		http.ListenAndServeTLS(":443", os.Getenv("SECURE_CERT"), os.Getenv("SECURE_KEY"), routes)

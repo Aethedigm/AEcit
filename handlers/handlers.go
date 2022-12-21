@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
+	"main/data"
 	"net/http"
 
 	"github.com/CloudyKit/jet/v6"
@@ -14,6 +16,23 @@ type Handlers struct {
 	JetViews *jet.Set
 	DB       *sql.DB
 	Sessions *scs.SessionManager
+	Models   data.Model
+}
+
+func (h *Handlers) TestUser(w http.ResponseWriter, r *http.Request) {
+	usr, err := h.Models.Users.GetByEmail("aethedigm@gmail.com")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data, err := json.Marshal(usr)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(data)
 }
 
 func (h *Handlers) Render(w http.ResponseWriter, r *http.Request, view string, variables interface{}) error {
