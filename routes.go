@@ -15,10 +15,18 @@ func MakeRoutes(session *scs.SessionManager) chi.Router {
 	r.Use(middleware.Recoverer)
 	r.Use(session.LoadAndSave)
 
+	// API Routes
+	r.Route("/api", func(r chi.Router) {
+
+	})
+
 	// ROUTES
 	r.Get("/test", Handler.TestUser)
-
 	r.Get("/", Handler.Home)
+
+	// Public file server
+	fileServer := http.FileServer(http.Dir("./public"))
+	r.Handle("/public/*", http.StripPrefix("/public", fileServer))
 
 	return r
 }
