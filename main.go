@@ -9,6 +9,7 @@ import (
 	"main/handlers"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/alexedwards/scs/v2"
 
@@ -19,7 +20,7 @@ import (
 )
 
 var (
-	Api api.Api
+	Api     api.Api
 	Handler handlers.Handlers
 	Models  data.Model
 )
@@ -49,7 +50,7 @@ func main() {
 	Api.Init(DB, Sess)
 
 	// Initialize Handlers
-	Handler.Init(GetRootPath(), DB, Sess)
+	Handler.Init(GetRootPath(), DB, Sess, &Api)
 
 	// Models init
 	Models.New(DB)
