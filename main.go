@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"main/api"
 	"main/data"
 	"main/handlers"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/alexedwards/scs/v2"
 
@@ -18,6 +20,7 @@ import (
 )
 
 var (
+	Api     api.Api
 	Handler handlers.Handlers
 	Models  data.Model
 )
@@ -25,6 +28,7 @@ var (
 func main() {
 	// Create session
 	Sess := scs.New()
+	Sess.Store = &data.SessionStore{}
 
 	// Create routes
 	routes := MakeRoutes(Sess)
@@ -42,8 +46,11 @@ func main() {
 		return
 	}
 
+	// Initialize Api
+	Api.Init(DB, Sess)
+
 	// Initialize Handlers
-	Handler.Init(GetRootPath(), DB, Sess)
+	Handler.Init(GetRootPath(), DB, Sess, &Api)
 
 	// Models init
 	Models.New(DB)
@@ -52,12 +59,33 @@ func main() {
 	log.Println("VERSION:", os.Getenv("VERSION"))
 
 	if os.Getenv("PRODUCTION") == "true" {
+		startRedirectServer()
+
 		log.Println("Listening on port 443 with TLS/SSL")
 		http.ListenAndServeTLS(":443", os.Getenv("SECURE_CERT"), os.Getenv("SECURE_KEY"), routes)
 	} else {
-		log.Println("Listening on port 4000")
-		http.ListenAndServe(":4000", routes)
+		port := os.Getenv("PORT")
+		log.Println("Listening on port:", port)
+		http.ListenAndServe(":"+port, routes)
 	}
+}
+
+func startRedirectServer() {
+	rerouteServer := &http.Server{
+		Addr:         fmt.Sprintf(":%s", os.Getenv("PORT")),
+		Handler:      http.HandlerFunc(redirectToHTTPS),
+		IdleTimeout:  30 * time.Second,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+
+	go func() {
+		rerouteServer.ListenAndServe()
+	}()
+}
+
+func redirectToHTTPS(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, os.Getenv("URL")+r.RequestURI, http.StatusMovedPermanently)
 }
 
 func ConnectToDB() (*sql.DB, error) {

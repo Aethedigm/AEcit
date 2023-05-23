@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"main/api"
 	"main/data"
 	"net/http"
 
@@ -17,6 +18,7 @@ type Handlers struct {
 	DB       *sql.DB
 	Sessions *scs.SessionManager
 	Models   data.Model
+	Api      api.Api
 }
 
 func (h *Handlers) TestUser(w http.ResponseWriter, r *http.Request) {

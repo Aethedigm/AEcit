@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
+	"main/api"
 	"net/http"
 	"os"
 	"time"
@@ -11,7 +12,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 )
 
-func (h *Handlers) Init(rootPath string, db *sql.DB, Sess *scs.SessionManager) {
+func (h *Handlers) Init(rootPath string, db *sql.DB, Sess *scs.SessionManager, api *api.Api) {
 	h.JetViews = jet.NewSet(
 		jet.NewOSFileSystemLoader(fmt.Sprintf("%s/views", rootPath)),
 		jet.InDevelopmentMode(),
@@ -29,4 +30,6 @@ func (h *Handlers) Init(rootPath string, db *sql.DB, Sess *scs.SessionManager) {
 	h.Sessions.Cookie.Persist = os.Getenv("COOKIE_PERSIST") == "true"
 	h.Sessions.Cookie.SameSite = http.SameSiteStrictMode
 	h.Sessions.Cookie.Secure = os.Getenv("COOKIE_SECURE") == "true"
+
+	h.Api = *api
 }
